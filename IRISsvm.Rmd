@@ -16,7 +16,7 @@ library(e1071)
 
 ## load function svm
 
-```{r}
+```{r eval=FALSE}
 ?svm
 ```
 
