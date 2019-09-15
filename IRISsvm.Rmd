@@ -67,6 +67,44 @@ table(pred, yTest)
 pred <- predict(model, xTest, decision.values = TRUE)
 attr(pred, "decision.values")[1:4,]
 
+```
+
+## put the SVM in a loop;
+first try 5 different samples
+
+The idea is to run the 'svm' model 5 times, with a different sample each time, print the results
+
+```{r}
+nIris = 100 # put 100 observations in the training set
+
+for (sampleRun in 1:5) {  # 5 iterations
+  trainIndex = sample(1:150, 100, replace=FALSE) #get a new sample, size nIris
+  
+  xTrain = x[trainIndex,] # get new values for the training and test set
+  yTrain = y[trainIndex]
+
+model <- svm(xTrain, yTrain) # set up the model based on the new set
+
+xTest = x[-trainIndex,]
+yTest = y[-trainIndex]
+
+# test with train data
+pred <- predict(model, xTest)
+# (same as:)
+#pred <- fitted(model)
+
+# Check accuracy:
+(print(paste('random sample # ',sampleRun)))
+print(table(pred, yTest))
+
+# compute decision values and probabilities:
+pred <- predict(model, xTest, decision.values = TRUE)
+attr(pred, "decision.values")[1:4,]
+  
+}
+```
+
+
 # visualize (classes by color, SV by crosses):
 plot(cmdscale(dist(iris[,-5])),
      col = as.integer(iris[,5]),
