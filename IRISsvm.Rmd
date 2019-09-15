@@ -12,15 +12,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# SVM example
+# SVM example- Regression included
+
+get the library with function 'svm'
 ```{r}
 library(e1071)
-```
-
-## load function svm
-
-```{r eval=FALSE}
-?svm
 ```
 
 ## load the Iris data
@@ -31,54 +27,69 @@ attach(iris)
 # View(iris)
 ```
 
-
 ## classification mode
-# default with factor response:
+ default with factor response:
+ 
 ```{r}
 model = svm(Species ~ ., data = iris)
 print(model)
 summary(model)
 ```
 
-
-# alternatively the traditional interface:
+## alternatively the 'traditional' interface:
 ```{r}
+
 x <- subset(iris, select = -Species)
 y <- Species
 
-trainIndex = sample(1:150, 100, replace=FALSE)
+trainIndex = sample(1:150, 100, replace=FALSE) #set up the training sample
 xTrain = x[trainIndex,]
 yTrain = y[trainIndex]
 
-model <- svm(xTrain, yTrain) 
+model <- svm(xTrain, yTrain) # get the SVM model
 
 print(model)
 summary(model)
 
-xTest = x[-trainIndex,]
+```
+
+```{r}
+
+xTest = x[-trainIndex,] # set up the training set
 yTest = y[-trainIndex]
 
 # test with train data
+
 pred <- predict(model, xTest)
 # (same as:)
 #pred <- fitted(model)
+```
 
-# Check accuracy:
+## Check accuracy:
+```{r}
 table(pred, yTest)
 
-# compute decision values and probabilities:
+```
+
+
+## compute decision values and probabilities:
+
+```{r}
 pred <- predict(model, xTest, decision.values = TRUE)
 attr(pred, "decision.values")[1:4,]
+```
 
-# visualize (classes by color, SV by crosses):
+## visualize (classes by color, SV by crosses):
+
+```{r}
+
 plot(cmdscale(dist(iris[,-5])),
      col = as.integer(iris[,5]),
      pch = c("o","+")[1:150 %in% model$index + 1])
 ```
 
 
-
-# try regression mode on two dimensions
+# regression model on two dimensions
 
 ## create data
 
@@ -105,7 +116,7 @@ new <- predict(m, x)
 plot(x, y)
 points(x, log(x), col = 2)
 points(x, new, col = 4)
-legend('topleft', c('septal width', 'log (x)', 'predicted y'), col=c(1,2,4), lty=1)
+legend('topleft', c('x', 'log (x)', 'predicted y'), col=c(1,2,4), lty=1)
 
 ```
 
